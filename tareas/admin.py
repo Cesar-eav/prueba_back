@@ -7,3 +7,4 @@ from .models import Tarea
 class AutorAdmin(admin.ModelAdmin):
     list_display = ('titulo',)
     search_fields = ('titulo',)
+    list_filter = ('titulo',)
