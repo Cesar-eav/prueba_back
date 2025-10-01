@@ -1,0 +1,46 @@
+<!-- templates/tarea/lista.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Listado de Tareas</title>
+</head>
+<body>
+  <h1>Listado de Tareas</h1>
+
+  {% if tareas %}
+    <table border="1" cellpadding="6" cellspacing="0">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Descripción</th>
+          <th>Prioridad</th>
+          <th>Vigente</th>
+          <th>Fecha creación</th>
+          <th>Fecha límite</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for tarea in tareas %}
+          <tr>
+            <td>{{ tarea.titulo }}</td>
+            <td>{{ tarea.descripcion }}</td>
+            <td>{{ tarea.prioridad }}</td>
+            <td>{{ tarea.vigente|yesno:"Sí,No" }}</td>
+            <td>{{ tarea.fecha_creacion }}</td>
+            <td>
+              {% if tarea.fecha_limite %}
+                {{ tarea.fecha_limite }}
+              {% else %}
+                —
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No hay tareas.</p>
+  {% endif %}
+</body>
+</html>
