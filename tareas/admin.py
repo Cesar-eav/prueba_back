@@ -5,6 +5,12 @@ from .models import Tarea
 
 @admin.register(Tarea)
 class AutorAdmin(admin.ModelAdmin):
-    list_display = ('titulo',)
-    search_fields = ('titulo',)
-    list_filter = ('titulo',)
+    list_display = ("titulo", "prioridad", "vigente", "fecha_limite", "fecha_creacion")
+    search_fields = ("titulo","descripcion")
+    list_filter = ("prioridad", "vigente")
+
+
+
+
+
+

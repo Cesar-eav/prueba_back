@@ -1,19 +1,66 @@
-<html lang="en">
-
+<!-- templates/tarea/confirmar_eliminar.html -->
+<!DOCTYPE html>
+<html lang="es">
 <head>
-
-<title>Eliminar</title>
+  <meta charset="UTF-8">
+  <title>Eliminar Tarea</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, sans-serif; background:#f8fafc; }
+    .wrap { max-width: 560px; margin: 40px auto; padding: 0 16px; }
+    .card {
+      background: #fff; border: 1px solid #e5e7eb; border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,.06); padding: 24px;
+    }
+    .title { margin: 0 0 6px 0; font-size: 22px; }
+    .subtitle { margin: 0 0 18px 0; color: #6b7280; }
+    .warning {
+      display:flex; gap:10px; align-items:flex-start; background:#fef2f2; border:1px solid #fecaca;
+      color:#991b1b; padding:12px; border-radius:10px; margin-bottom:18px;
+    }
+    .warning-icon { font-weight: 700; width: 22px; height: 22px; line-height:22px; text-align:center; border-radius:50%; background:#fecaca; }
+    .actions { display:flex; gap:12px; margin-top: 12px; }
+    .btn {
+      display:inline-block; padding:10px 16px; border-radius:10px; text-decoration:none; font-weight:600; border:1px solid transparent;
+    }
+    .btn-danger { background:#dc2626; color:#fff; }
+    .btn-danger:hover { background:#b91c1c; }
+    .btn-secondary { background:#fff; color:#1f2937; border-color:#d1d5db; }
+    .btn-secondary:hover { background:#f3f4f6; }
+    .meta { margin-top: 10px; font-size: 14px; color:#4b5563; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <div class="card">
+      <h1 class="title">Eliminar tarea</h1>
+      <p class="subtitle">Estás a punto de eliminar esta tarea de forma permanente.</p>
 
-<h1>Eliminar a {{ object.titulo}}</h1>
-<form method="post">
-     {% csrf_token %}
-     <button type="submit">Sí</button>
-</form>
+      <div class="warning">
+        <div class="warning-icon">!</div>
+        <div>
+          <strong>Confirmación requerida</strong><br>
+          Esta acción no se puede deshacer.
+        </div>
+      </div>
 
+      <p class="meta">
+        <strong>Título:</strong> <span class="mono">{{ object.titulo }}</span><br>
+        {% if object.fecha_limite %}
+          <strong>Fecha límite:</strong> {{ object.fecha_limite }}
+        {% endif %}
+      </p>
 
-</table>
-
+      <form method="post">
+        {% csrf_token %}
+        <div class="actions">
+          <button type="submit" class="btn btn-danger">Sí, eliminar</button>
+          <!-- Botón "No" que regresa a la raíz (name="lista") -->
+          <a href="{% url 'tareas:lista' %}" class="btn btn-secondary">No, cancelar</a>
+          <!-- Si prefieres evitar el name y forzar raíz absoluta, usa: href="/" -->
+        </div>
+      </form>
+    </div>
+  </div>
 </body>
+</html>

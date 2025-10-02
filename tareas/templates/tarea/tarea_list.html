@@ -4,15 +4,72 @@
 <head>
   <meta charset="UTF-8">
   <title>Listado de Tareas</title>
+  <style>
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, sans-serif; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    thead th { background: #eef2ff; text-align: left; padding: 10px; border-bottom: 2px solid #c7d2fe; }
+    tbody td { padding: 10px; border-bottom: 1px solid #e5e7eb; vertical-align: top; }
+
+    /* Colores fuertes por estado */
+    .row-vigente {
+      background: #bbf7d0;          /* green-200 */
+      border-left: 4px solid #16a34a;/* green-600 */
+    }
+    .row-no-vigente {
+      background: #fecaca;           /* red-200 */
+      border-left: 4px solid #dc2626;/* red-600 */
+    }
+
+    /* Badge de prioridad */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 12px;
+      border: 1px solid #9ca3af;
+      background: #f3f4f6;
+    }
+
+    /* Enlaces (azul) y acciones */
+    a { color: #1d4ed8; }            /* blue-700 */
+    a:hover { text-decoration: underline; }
+    .acciones a { text-decoration: none; margin-right: 10px; }
+
+    /* Leyenda */
+    .legend { margin-top: 8px; font-size: 14px; color: #374151; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border: 1px solid #6b7280; margin-right: 6px; vertical-align: -2px; }
+    .swatch.v { background: #bbf7d0; border-color: #16a34a; }
+    .swatch.nv { background: #fecaca; border-color: #dc2626; }
+  .btn-add {
+    display:inline-flex; align-items:center; gap:10px;
+    padding:10px 14px; border-radius:12px;
+    background:#1d4ed8; color:#fff; text-decoration:none; font-weight:700;
+    box-shadow:0 6px 16px rgba(29,78,216,.25); border:1px solid transparent;
+  }
+  .btn-add:hover { filter:brightness(.95); }
+  .btn-add:focus { outline:3px solid #93c5fd; outline-offset:2px; }
+  .btn-add .plus {
+    display:inline-flex; align-items:center; justify-content:center;
+    width:22px; height:22px; border-radius:9999px; background:#fff; color:#1d4ed8;
+    font-weight:900; line-height:1; font-size:16px;
+  }
+  </style>
 </head>
 <body>
   <h1>Listado de Tareas</h1>
 
-<a href="{% url 'tareas:crear' %}">Nuevo nueva tarea</a><br>
-
+<a href="{% url 'tareas:crear' %}" class="btn-add">
+  <span class="plus">+</span>
+  Agregar tarea
+</a>
+  <div class="legend">
+    <span class="swatch v"></span> Vigente (1)
+    &nbsp;&nbsp;&nbsp;
+    <span class="swatch nv"></span> No vigente (0)
+  </div>
 
   {% if tareas %}
-    <table border="1" cellpadding="6" cellspacing="0">
+    <table>
       <thead>
         <tr>
           <th>Título</th>
@@ -26,10 +83,10 @@
       </thead>
       <tbody>
         {% for tarea in tareas %}
-          <tr>
+          <tr class="{% if tarea.vigente %}row-vigente{% else %}row-no-vigente{% endif %}">
             <td>{{ tarea.titulo }}</td>
             <td>{{ tarea.descripcion }}</td>
-            <td>{{ tarea.prioridad }}</td>
+            <td><span class="badge">{{ tarea.prioridad }}</span></td>
             <td>{{ tarea.vigente|yesno:"Sí,No" }}</td>
             <td>{{ tarea.fecha_creacion }}</td>
             <td>
@@ -39,10 +96,9 @@
                 —
               {% endif %}
             </td>
-            <td>
-              <a href="{% url 'tareas:detalle' tarea.id %}">Ver</a> |
-
-              <a href="{% url 'tareas:editar' tarea.id %}">Editar</a> |
+            <td class="acciones">
+              <a href="{% url 'tareas:detalle' tarea.id %}">Ver</a>
+              <a href="{% url 'tareas:editar' tarea.id %}">Editar</a>
               <a href="{% url 'tareas:eliminar' tarea.id %}">Eliminar</a>
             </td>
           </tr>

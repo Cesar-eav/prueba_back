@@ -1,25 +1,96 @@
+<!-- templates/tarea/detalle.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
   <title>Detalle de Tarea</title>
+  <style>
+    :root{
+      --green-bg:#bbf7d0; --green-fg:#065f46; --green-bd:#16a34a;
+      --red-bg:#fecaca;   --red-fg:#7f1d1d; --red-bd:#dc2626;
+      --blue:#1d4ed8;     --ink:#111827;    --muted:#6b7280;
+      --card:#ffffff;     --line:#e5e7eb;   --wash:#f8fafc;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background:var(--wash); color:var(--ink);
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,sans-serif;}
+    .wrap{max-width:800px; margin:40px auto; padding:0 16px;}
+    .card{
+      background:var(--card); border:1px solid var(--line); border-radius:14px;
+      box-shadow:0 8px 24px rgba(0,0,0,.06); padding:24px;
+    }
+    h1{margin:0 0 6px 0; font-size:24px}
+    .subtitle{margin:0 0 18px 0; color:var(--muted)}
+    .meta{display:grid; grid-template-columns: 180px 1fr; gap:8px 16px; margin-top:8px}
+    .label{color:var(--muted)}
+    .value{color:var(--ink)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+    /* Badges */
+    .badge{
+      display:inline-block; padding:4px 10px; border-radius:9999px;
+      font-size:12px; font-weight:600; border:1px solid var(--line); background:#f3f4f6;
+    }
+    .badge-prio{border-color:#9ca3af; background:#f3f4f6}
+    .badge-ok{background:var(--green-bg); color:var(--green-fg); border-color:var(--green-bd)}
+    .badge-no{background:var(--red-bg);   color:var(--red-fg);   border-color:var(--red-bd)}
+
+    /* Actions */
+    .actions{margin-top:20px; display:flex; gap:12px; flex-wrap:wrap}
+    a{color:var(--blue); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .btn{
+      display:inline-block; padding:10px 16px; border-radius:10px; font-weight:600;
+      border:1px solid #d1d5db; background:#fff; color:#1f2937; text-decoration:none;
+    }
+    .btn:hover{background:#f3f4f6}
+    .btn-primary{border-color:transparent; background:var(--blue); color:#fff}
+    .btn-primary:hover{filter:brightness(.95)}
+    .btn-danger{background:#dc2626; color:#fff; border-color:transparent}
+    .btn-danger:hover{filter:brightness(.95)}
+  </style>
 </head>
 <body>
-  <h1>Detalle de Tarea</h1>
+  <div class="wrap">
+    <div class="card">
+      <h1>Detalle de Tarea</h1>
+      <p class="subtitle mono">{{ tarea.titulo }}</p>
 
-  <div>
-    <p><strong>Título:</strong> {{ tarea.titulo }}</p>
-    <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
-    <p><strong>Prioridad:</strong> {{ tarea.prioridad }}</p>
-    <p><strong>Vigente:</strong> {{ tarea.vigente|yesno:"Sí,No" }}</p>
-    <p><strong>Fecha de creación:</strong> {{ tarea.fecha_creacion }}</p>
-    <p><strong>Fecha límite:</strong>
-      {% if tarea.fecha_limite %}
-        {{ tarea.fecha_limite }}
-      {% else %}
-        —
-      {% endif %}
-    </p>
+      <!-- Badges superiores -->
+      <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+        <span class="badge badge-prio">Prioridad: {{ tarea.prioridad }}</span>
+        {% if tarea.vigente %}
+          <span class="badge badge-ok">Vigente</span>
+        {% else %}
+          <span class="badge badge-no">No vigente</span>
+        {% endif %}
+      </div>
+
+      <!-- Datos -->
+      <div class="meta">
+        <div class="label">Descripción</div>
+        <div class="value">{{ tarea.descripcion }}</div>
+
+        <div class="label">Fecha de creación</div>
+        <div class="value">{{ tarea.fecha_creacion }}</div>
+
+        <div class="label">Fecha límite</div>
+        <div class="value">
+          {% if tarea.fecha_limite %}
+            {{ tarea.fecha_limite }}
+          {% else %}
+            —
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Acciones -->
+      <div class="actions">
+        <a href="{% url 'tareas:lista' %}" class="btn">← Volver al listado</a>
+        <a href="{% url 'tareas:editar' tarea.id %}" class="btn btn-primary">Editar</a>
+        <a href="{% url 'tareas:eliminar' tarea.id %}" class="btn btn-danger">Eliminar</a>
+      </div>
+    </div>
   </div>
 </body>
 </html>

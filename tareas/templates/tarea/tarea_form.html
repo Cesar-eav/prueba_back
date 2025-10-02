@@ -1,15 +1,124 @@
-<html lang="en">
-  <head>
-    <title>Formulario Tareas</title>
-  </head>
+<!-- templates/tarea/form.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% if form.instance.pk %}Editar Tarea{% else %}Crear Nueva Tarea{% endif %}</title>
+  <style>
+    :root{
+      --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --wash:#f8fafc; --card:#ffffff;
+      --blue:#1d4ed8; --blue-600:#2563eb; --red:#dc2626;
+    }
+    *{box-sizing:border-box}
+    body{margin:0; background:var(--wash); color:var(--ink);
+         font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,sans-serif;}
+    .wrap{max-width:760px; margin:40px auto; padding:0 16px;}
+    h1{margin:0 0 14px 0; font-size:26px}
+    .card{background:var(--card); border:1px solid var(--line); border-radius:14px;
+          box-shadow:0 8px 24px rgba(0,0,0,.06); padding:22px;}
+    form{display:grid; gap:16px}
+    .field{display:grid; gap:6px}
+    label{font-weight:600}
+    .req{color:var(--red); margin-left:4px}
+    input[type="text"], input[type="number"], input[type="date"], textarea, select{
+      width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:10px;
+      background:#fff; font:inherit;
+    }
+    textarea{min-height:110px; resize:vertical}
+    .errors{color:var(--red); font-size:13px}
+    .help{color:var(--muted); font-size:13px}
 
-  <body>
-    <h1>Crear Nueva Tarea</h1>
+    /* Checkbox al lado de "Vigente" */
+    .inline-check{
+      display:flex; align-items:center; gap:10px;
+    }
+    .inline-check input[type="checkbox"]{
+      width:18px; height:18px; accent-color: var(--blue);
+      cursor:pointer;
+    }
+    .inline-check .hint{color:var(--muted); font-size:13px}
 
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Guardar</button>
-    </form>
-  </body>
+    .actions{display:flex; gap:10px; flex-wrap:wrap; margin-top:6px}
+    .btn{display:inline-block; padding:10px 16px; border-radius:10px; font-weight:600;
+         text-decoration:none; border:1px solid #d1d5db; background:#fff; color:#1f2937;}
+    .btn:hover{background:#f3f4f6}
+    .btn-primary{border-color:transparent; background:var(--blue); color:#fff}
+    .btn-primary:hover{background:var(--blue-600)}
+    a.link{color:var(--blue); text-decoration:none}
+    a.link:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>{% if form.instance.pk %}Editar Tarea{% else %}Crear Nueva Tarea{% endif %}</h1>
+
+    <div class="card">
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Título -->
+        <div class="field">
+          <label for="{{ form.titulo.id_for_label }}">
+            Título <span class="req">*</span>
+          </label>
+          {{ form.titulo }}
+          {% if form.titulo.errors %}<div class="errors">{{ form.titulo.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Descripción -->
+        <div class="field">
+          <label for="{{ form.descripcion.id_for_label }}">Descripción</label>
+          {{ form.descripcion }}
+          {% if form.descripcion.errors %}<div class="errors">{{ form.descripcion.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Prioridad -->
+        <div class="field">
+          <label for="{{ form.prioridad.id_for_label }}">Prioridad</label>
+          {{ form.prioridad }}
+          <div class="help">Número entero (por defecto 3).</div>
+          {% if form.prioridad.errors %}<div class="errors">{{ form.prioridad.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Vigente (checkbox al lado del texto) -->
+        <div class="field">
+          <div class="inline-check">
+            <!-- Enlaza el label con el id del checkbox para que el texto también haga toggle -->
+            <label for="{{ form.vigente.id_for_label }}" style="margin:0;">Vigente</label>
+            {{ form.vigente }}
+            <span class="hint">Activa para marcar la tarea como vigente.</span>
+          </div>
+          {% if form.vigente.errors %}<div class="errors">{{ form.vigente.errors }}</div>{% endif %}
+        </div>
+
+        <!-- Fecha límite -->
+        <div class="field">
+          <label for="{{ form.fecha_limite.id_for_label }}">Fecha límite</label>
+          {{ form.fecha_limite }}
+          <div class="help">Opcional.</div>
+          {% if form.fecha_limite.errors %}<div class="errors">{{ form.fecha_limite.errors }}</div>{% endif %}
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn btn-primary">
+            {% if form.instance.pk %}Guardar cambios{% else %}Guardar{% endif %}
+          </button>
+          <a href="{% url 'tareas:lista' %}" class="btn">Cancelar</a>
+        </div>
+      </form>
+    </div>
+
+    <p style="margin-top:12px">
+      <a href="{% url 'tareas:lista' %}" class="link">← Volver al listado</a>
+    </p>
+  </div>
+
+  <script>
+    // Pequeña mejora UX: foco al primer campo si existe
+    (function() {
+      const first = document.querySelector('input[type="text"], textarea, select');
+      if (first) first.focus();
+    })();
+  </script>
+</body>
 </html>
