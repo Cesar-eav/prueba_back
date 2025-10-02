@@ -8,6 +8,9 @@
 <body>
   <h1>Listado de Tareas</h1>
 
+<a href="{% url 'tareas:crear' %}">Nuevo nueva tarea</a><br>
+
+
   {% if tareas %}
     <table border="1" cellpadding="6" cellspacing="0">
       <thead>
@@ -37,6 +40,8 @@
               {% endif %}
             </td>
             <td>
+              <a href="{% url 'tareas:detalle' tarea.id %}">Ver</a> |
+
               <a href="{% url 'tareas:editar' tarea.id %}">Editar</a> |
               <a href="{% url 'tareas:eliminar' tarea.id %}">Eliminar</a>
             </td>

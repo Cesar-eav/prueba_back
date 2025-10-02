@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalle de Tarea</title>
+</head>
+<body>
+  <h1>Detalle de Tarea</h1>
+
+  <div>
+    <p><strong>Título:</strong> {{ tarea.titulo }}</p>
+    <p><strong>Descripción:</strong> {{ tarea.descripcion }}</p>
+    <p><strong>Prioridad:</strong> {{ tarea.prioridad }}</p>
+    <p><strong>Vigente:</strong> {{ tarea.vigente|yesno:"Sí,No" }}</p>
+    <p><strong>Fecha de creación:</strong> {{ tarea.fecha_creacion }}</p>
+    <p><strong>Fecha límite:</strong>
+      {% if tarea.fecha_limite %}
+        {{ tarea.fecha_limite }}
+      {% else %}
+        —
+      {% endif %}
+    </p>
+  </div>
+</body>
+</html>
